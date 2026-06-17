@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gateway Dashboard</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; min-height: 100vh; }
+  
+  .login-wrap { max-width: 420px; margin: 60px auto; padding: 0 16px; }
+  .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+  .logo-icon { width: 40px; height: 40px; background: #dbeafe; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .logo-title { font-size: 18px; font-weight: 600; }
+  .logo-sub { font-size: 12px; color: #666; }
+
+  .card { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 24px; }
+  
+  label { display: block; font-size: 12px; color: #555; margin-bottom: 5px; }
+  input, select { width: 100%; border: 1px solid #ddd; border-radius: 8px; padding: 8px 12px; font-size: 14px; color: #1a1a1a; background: #fafafa; outline: none; transition: border-color .15s; }
+  input:focus, select:focus { border-color: #3b82f6; background: #fff; }
+  .form-group { margin-bottom: 14px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .hint { font-size: 11px; color: #999; margin-top: 4px; }
+
+  button { border: 1px solid #ddd; border-radius: 8px; padding: 8px 16px; font-size: 13px; cursor: pointer; background: #fff; color: #1a1a1a; transition: background .15s; }
+  button:hover { background: #f5f5f5; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary { background: #3b82f6; color: #fff; border-color: #3b82f6; font-weight: 500; }
+  .btn-primary:hover { background: #2563eb; }
+  .btn-full { width: 100%; padding: 10px; font-size: 14px; }
+  .btn-danger { color: #dc2626; }
+  .btn-danger:hover { background: #fef2f2; border-color: #fca5a5; }
+
+  .toast { padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
+  .toast-success { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+  .toast-error { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
+  .toast-info { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+
+  .dashboard { max-width: 700px; margin: 0 auto; padding: 24px 16px; }
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .header-left { display: flex; align-items: center; gap: 10px; }
+  .header-icon { width: 36px; height: 36px; background: #dbeafe; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .header-title { font-size: 16px; font-weight: 600; }
+  .header-sub { font-size: 11px; color: #999; font-family: monospace; }
+  .header-actions { display: flex; gap: 8px; }
+
+  .table-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; overflow: hidden; margin-bottom: 10px; }
+  .table-head { display: grid; grid-template-columns: 130px 1fr 1fr 50px; gap: 12px; padding: 8px 14px; background: #f9fafb; border-bottom: 1px solid #e5e5e5; }
+  .table-head span { font-size: 11px; color: #999; font-weight: 500; text-transform: uppercase; letter-spacing: .05em; }
+  .table-row { display: grid; grid-template-columns: 130px 1fr 1fr 50px; gap: 12px; padding: 10px 14px; align-items: center; border-bottom: 1px solid #f0f0f0; }
+  .table-row:last-child { border-bottom: none; }
+  .ver-label { font-family: monospace; font-size: 13px; font-weight: 600; }
+  .table-empty { padding: 40px; text-align: center; color: #bbb; font-size: 13px; }
+
+  .status-ok { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; font-weight: 500; }
+  .status-maintenance { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; font-weight: 500; }
+  .status-need_update { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; font-weight: 500; }
+
+  .add-row { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 10px 14px; display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+  .add-row input { flex: 1; margin: 0; }
+
+  .json-toggle { font-size: 12px; color: #999; cursor: pointer; background: none; border: none; display: flex; align-items: center; gap: 4px; padding: 4px 2px; }
+  .json-toggle:hover { color: #555; background: none; }
+  .json-pre { margin-top: 8px; padding: 12px 14px; background: #f9fafb; border: 1px solid #e5e5e5; border-radius: 8px; font-size: 12px; font-family: monospace; color: #444; overflow: auto; max-height: 280px; }
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+const ENVS = ["production", "alpha"];
+const STATUSES = [
+  { value: "ok", label: "OK" },
+  { value: "maintenance", label: "Maintenance" },
+  { value: "need_update", label: "Need Update" },
+];
+
+let state = {
+  step: "login",
+  token: localStorage.getItem("gw_token") || "",
+  owner: localStorage.getItem("gw_owner") || "DNLiou",
+  repo: localStorage.getItem("gw_repo") || "danceguru-gateway",
+  filePath: "gateway.json",
+  sha: null,
+  versions: {},
+  loading: false,
+  toast: null,
+  newVer: "",
+  showJson: false,
+};
+
+function toB64(str) {
+  const bytes = new TextEncoder().encode(str);
+  return btoa(Array.from(bytes, b => String.fromCodePoint(b)).join(""));
+}
+function fromB64(b64) {
+  const bin = atob(b64.replace(/\n/g, ""));
+  return new TextDecoder().decode(Uint8Array.from(bin, c => c.codePointAt(0)));
+}
+
+function notify(type, text) {
+  state.toast = { type, text };
+  render();
+  setTimeout(() => { state.toast = null; render(); }, 4000);
+}
+
+function apiUrl() {
+  return `https://api.github.com/repos/${state.owner}/${state.repo}/contents/${state.filePath}`;
+}
+function hdrs() {
+  return { Authorization: `Bearer ${state.token}`, Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "Content-Type": "application/json" };
+}
+
+async function connect() {
+  state.loading = true; render();
+  try {
+    const r = await fetch(apiUrl(), { headers: hdrs() });
+    if (r.status === 404) {
+      state.versions = {}; state.sha = null; state.step = "dashboard";
+      localStorage.setItem("gw_token", state.token);
+      localStorage.setItem("gw_owner", state.owner);
+      localStorage.setItem("gw_repo", state.repo);
+      notify("info", "gateway.json 不存在，Publish 時會自動建立");
+    } else if (!r.ok) {
+      const e = await r.json(); throw new Error(e.message || `HTTP ${r.status}`);
+    } else {
+      const d = await r.json();
+      state.sha = d.sha;
+      state.versions = JSON.parse(fromB64(d.content));
+      state.step = "dashboard";
+      localStorage.setItem("gw_token", state.token);
+      localStorage.setItem("gw_owner", state.owner);
+      localStorage.setItem("gw_repo", state.repo);
+      notify("success", "成功讀取 gateway.json");
+    }
+  } catch(e) { notify("error", `連線失敗：${e.message}`); }
+  state.loading = false; render();
+}
+
+async function publish() {
+  state.loading = true; render();
+  try {
+    const body = {
+      message: `chore: update gateway ${new Date().toISOString().slice(0,16)}`,
+      content: toB64(JSON.stringify(state.versions, null, 2)),
+      ...(state.sha ? { sha: state.sha } : {})
+    };
+    const r = await fetch(apiUrl(), { method: "PUT", headers: hdrs(), body: JSON.stringify(body) });
+    if (!r.ok) { const e = await r.json(); throw new Error(e.message || `HTTP ${r.status}`); }
+    const d = await r.json();
+    state.sha = d.content.sha;
+    notify("success", "已成功發布到 GitHub ✓");
+  } catch(e) { notify("error", `發布失敗：${e.message}`); }
+  state.loading = false; render();
+}
+
+function sortedVersions() {
+  return Object.keys(state.versions).sort((a, b) => {
+    const p = s => s.split(".").map(n => parseInt(n) || 0);
+    const [a1,a2,a3] = p(a), [b1,b2,b3] = p(b);
+    return b1-a1 || b2-a2 || b3-a3;
+  });
+}
+
+function render() {
+  const app = document.getElementById("app");
+  if (state.step === "login") {
+    app.innerHTML = `
+      <div class="login-wrap">
+        <div class="logo">
+          <div class="logo-icon">🛡️</div>
+          <div>
+            <div class="logo-title">Gateway Dashboard</div>
+            <div class="logo-sub">DanceGuru Config Manager</div>
+          </div>
+        </div>
+        <div class="card">
+          ${state.toast ? `<div class="toast toast-${state.toast.type}">${state.toast.text}</div>` : ""}
+          <div class="form-group">
+            <label>GitHub Personal Access Token</label>
+            <input type="password" id="inp-token" value="${state.token}" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+            <div class="hint">需要 repo Contents 讀寫權限（fine-grained PAT）</div>
+          </div>
+          <div class="form-row">
+            <div>
+              <label>Owner</label>
+              <input id="inp-owner" value="${state.owner}" placeholder="username">
+            </div>
+            <div>
+              <label>Repository</label>
+              <input id="inp-repo" value="${state.repo}" placeholder="gateway-config">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>File Path</label>
+            <input id="inp-path" value="${state.filePath}">
+          </div>
+          <button class="btn-primary btn-full" id="btn-connect" ${state.loading ? "disabled" : ""}>
+            ${state.loading ? "連線中..." : "連線"}
+          </button>
+        </div>
+      </div>`;
+
+    document.getElementById("inp-token").oninput = e => state.token = e.target.value;
+    document.getElementById("inp-owner").oninput = e => state.owner = e.target.value;
+    document.getElementById("inp-repo").oninput = e => state.repo = e.target.value;
+    document.getElementById("inp-path").oninput = e => state.filePath = e.target.value;
+    document.getElementById("btn-connect").onclick = connect;
+  } else {
+    const rows = sortedVersions().map(ver => {
+      const e = state.versions[ver];
+      return `
+        <div class="table-row">
+          <span class="ver-label">${ver}</span>
+          <select class="env-sel" data-ver="${ver}">
+            ${ENVS.map(env => `<option value="${env}" ${e.environment===env?"selected":""}>${env}</option>`).join("")}
+          </select>
+          <select class="status-sel status-${e.status}" data-ver="${ver}">
+            ${STATUSES.map(s => `<option value="${s.value}" ${e.status===s.value?"selected":""}>${s.label}</option>`).join("")}
+          </select>
+          <button class="btn-danger del-btn" data-ver="${ver}">✕</button>
+        </div>`;
+    }).join("") || `<div class="table-empty">尚無版號，請在下方新增</div>`;
+
+    app.innerHTML = `
+      <div class="dashboard">
+        ${state.toast ? `<div class="toast toast-${state.toast.type}">${state.toast.text}</div>` : ""}
+        <div class="header">
+          <div class="header-left">
+            <div class="header-icon">🛡️</div>
+            <div>
+              <div class="header-title">Gateway Dashboard</div>
+              <div class="header-sub">${state.owner}/${state.repo} · ${state.filePath}</div>
+            </div>
+          </div>
+          <div class="header-actions">
+            <button id="btn-logout">登出</button>
+            <button class="btn-primary" id="btn-publish" ${state.loading?"disabled":""}>
+              🚀 ${state.loading ? "發布中..." : "Publish"}
+            </button>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-head">
+            <span>版號</span><span>Environment</span><span>Status</span><span></span>
+          </div>
+          ${rows}
+        </div>
+
+        <div class="add-row">
+          <input id="inp-newver" placeholder="新增版號，例如 1.2.0" style="font-family:monospace">
+          <button id="btn-add">新增</button>
+        </div>
+
+        <button class="json-toggle" id="btn-json">▾ 預覽 JSON</button>
+        ${state.showJson ? `<pre class="json-pre">${JSON.stringify(state.versions, null, 2)}</pre>` : ""}
+      </div>`;
+
+    document.getElementById("btn-logout").onclick = () => { state.step = "login"; render(); };
+    document.getElementById("btn-publish").onclick = publish;
+    document.getElementById("btn-add").onclick = () => {
+      const v = document.getElementById("inp-newver").value.trim();
+      if (!v) return;
+      if (state.versions[v]) { notify("error", "版號已存在"); return; }
+      state.versions[v] = { environment: "production", status: "ok" };
+      state.newVer = ""; render();
+    };
+    document.getElementById("inp-newver").onkeydown = e => {
+      if (e.key === "Enter") document.getElementById("btn-add").click();
+    };
+    document.getElementById("btn-json").onclick = () => { state.showJson = !state.showJson; render(); };
+
+    document.querySelectorAll(".env-sel").forEach(sel => {
+      sel.onchange = e => { state.versions[e.target.dataset.ver].environment = e.target.value; };
+    });
+    document.querySelectorAll(".status-sel").forEach(sel => {
+      sel.onchange = e => {
+        const ver = e.target.dataset.ver;
+        state.versions[ver].status = e.target.value;
+        e.target.className = `status-sel status-${e.target.value}`;
+      };
+    });
+    document.querySelectorAll(".del-btn").forEach(btn => {
+      btn.onclick = e => {
+        delete state.versions[e.target.dataset.ver];
+        render();
+      };
+    });
+  }
+}
+
+render();
+</script>
+</body>
+</html>
