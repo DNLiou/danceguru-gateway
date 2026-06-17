@@ -2,5 +2,9 @@
   "0.6.61": {
     "environment": "alpha",
     "status": "ok"
+  },
+  "0.6.57": {
+    "environment": "production",
+    "status": "need_update"
   }
 }
