@@ -10,8 +10,7 @@
   },
   "0.6.62": {
     "environment": "alpha",
-    "status": "maintenance",
-    "ismaintain": true,
-    "maintainUntil": "UTC:13:30:24"
+    "status": "need_update",
+    "ismaintain": false
   }
 }
