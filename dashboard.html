@@ -66,7 +66,9 @@
   .maintain-cell { display: flex; align-items: center; justify-content: center; }
   .maintain-cell input[type=checkbox] { width: 16px; height: 16px; cursor: pointer; accent-color: #3b82f6; }
 
-  .until-cell input[type=datetime-local] { font-size: 12px; padding: 5px 8px; }
+  .until-cell { display: flex; align-items: center; gap: 4px; }
+  .until-prefix { font-size: 12px; color: #666; font-family: monospace; white-space: nowrap; }
+  .until-cell input[type=time] { font-size: 12px; padding: 5px 8px; flex: 1; }
   .until-dash { color: #ccc; font-size: 14px; text-align: center; }
 
   .add-row { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 10px 14px; display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
@@ -231,7 +233,7 @@ function render() {
         </div>
         <div class="until-cell">
           ${isMaintain
-            ? `<input type="datetime-local" class="until-inp" data-ver="${ver}" value="${untilVal}">`
+            ? `<span class="until-prefix">UTC:</span><input type="time" step="1" class="until-inp" data-ver="${ver}" value="${untilVal.replace('UTC:', '')}">`
             : `<span class="until-dash">—</span>`}
         </div>
         <button class="btn-danger del-btn" data-ver="${ver}">✕</button>
@@ -313,7 +315,7 @@ function render() {
   });
   document.querySelectorAll(".until-inp").forEach(inp => {
     inp.onchange = e => {
-      state.versions[e.target.dataset.ver].maintainUntil = e.target.value;
+      state.versions[e.target.dataset.ver].maintainUntil = `UTC:${e.target.value}`;
     };
   });
   document.querySelectorAll(".del-btn").forEach(btn => {
