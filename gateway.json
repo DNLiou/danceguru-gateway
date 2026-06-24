@@ -9,6 +9,11 @@
     "ismaintain": false
   },
   "0.6.62": {
+    "environment": "production",
+    "status": "ok",
+    "ismaintain": false
+  },
+  "0.6.63": {
     "environment": "alpha",
     "status": "ok",
     "ismaintain": false
