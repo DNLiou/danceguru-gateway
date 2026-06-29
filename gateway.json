@@ -1,7 +1,7 @@
 {
   "0.6.61": {
     "environment": "production",
-    "status": "ok"
+    "status": "need_update"
   },
   "0.6.57": {
     "environment": "production",
