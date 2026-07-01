@@ -14,7 +14,7 @@
     "ismaintain": false
   },
   "0.6.63": {
-    "environment": "alpha",
+    "environment": "production",
     "status": "ok",
     "ismaintain": false
   }
