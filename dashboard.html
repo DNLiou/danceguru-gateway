@@ -143,6 +143,11 @@ async function connect() {
 }
 
 async function publish() {
+  const alphaCount = Object.values(state.versions).filter(v => v.environment === "alpha").length;
+  if (alphaCount >= 2) {
+    const confirmed = confirm(`⚠️ 警告：目前有 ${alphaCount} 個版號都設定為 alpha 環境，確定要發布嗎？`);
+    if (!confirmed) return;
+  }
   state.loading = true; render();
   try {
     const body = {
