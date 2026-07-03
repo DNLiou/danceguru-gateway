@@ -9,12 +9,13 @@
     "ismaintain": false
   },
   "0.6.62": {
-    "environment": "production",
-    "status": "ok",
-    "ismaintain": false
+    "environment": "alpha",
+    "status": "maintenance",
+    "ismaintain": true,
+    "maintainUntil": "UTC:10:00:19"
   },
   "0.6.63": {
-    "environment": "alpha",
+    "environment": "production",
     "status": "ok",
     "ismaintain": false
   }
