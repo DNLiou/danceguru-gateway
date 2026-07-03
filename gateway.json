@@ -17,5 +17,10 @@
     "environment": "production",
     "status": "ok",
     "ismaintain": false
+  },
+  "0.6.64": {
+    "environment": "alpha",
+    "status": "ok",
+    "ismaintain": false
   }
 }
