@@ -1,10 +1,10 @@
 {
   "0.6.61": {
-    "environment": "production",
+    "environment": "alpha",
     "status": "need_update"
   },
   "0.6.57": {
-    "environment": "production",
+    "environment": "alpha",
     "status": "need_update",
     "ismaintain": false
   },
