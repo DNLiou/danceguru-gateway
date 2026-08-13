@@ -20,6 +20,11 @@
     "maintainUntil": "UTC:10:00:00"
   },
   "0.6.64": {
+    "environment": "production",
+    "status": "ok",
+    "ismaintain": false
+  },
+  "0.6.65": {
     "environment": "alpha",
     "status": "ok",
     "ismaintain": false
