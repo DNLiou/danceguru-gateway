@@ -27,5 +27,80 @@
     "environment": "alpha",
     "status": "ok",
     "ismaintain": false
+  },
+  "0.6.55": {
+    "environment": "production",
+    "status": "need_update",
+    "ismaintain": false
+  },
+  "0.6.50": {
+    "environment": "production",
+    "status": "need_update",
+    "ismaintain": false
+  },
+  "0.6.47": {
+    "environment": "production",
+    "status": "need_update",
+    "ismaintain": false
+  },
+  "0.6.46": {
+    "environment": "production",
+    "status": "need_update",
+    "ismaintain": false
+  },
+  "0.6.43": {
+    "environment": "production",
+    "status": "need_update",
+    "ismaintain": false
+  },
+  "0.6.42": {
+    "environment": "production",
+    "status": "need_update",
+    "ismaintain": false
+  },
+  "0.6.41": {
+    "environment": "production",
+    "status": "need_update",
+    "ismaintain": false
+  },
+  "0.6.40": {
+    "environment": "production",
+    "status": "need_update",
+    "ismaintain": false
+  },
+  "0.6.39": {
+    "environment": "production",
+    "status": "need_update",
+    "ismaintain": false
+  },
+  "0.6.38": {
+    "environment": "production",
+    "status": "need_update",
+    "ismaintain": false
+  },
+  "0.6.26": {
+    "environment": "production",
+    "status": "need_update",
+    "ismaintain": false
+  },
+  "0.6.19": {
+    "environment": "production",
+    "status": "need_update",
+    "ismaintain": false
+  },
+  "0.6.16": {
+    "environment": "production",
+    "status": "need_update",
+    "ismaintain": false
+  },
+  "0.6.05": {
+    "environment": "production",
+    "status": "need_update",
+    "ismaintain": false
+  },
+  "0.6.04": {
+    "environment": "production",
+    "status": "need_update",
+    "ismaintain": false
   }
 }
