@@ -107,5 +107,10 @@
     "environment": "alpha",
     "status": "ok",
     "ismaintain": false
+  },
+  "0.6.67": {
+    "environment": "alpha",
+    "status": "ok",
+    "ismaintain": false
   }
 }
