@@ -20,13 +20,15 @@
   },
   "0.6.64": {
     "environment": "production",
-    "status": "ok",
-    "ismaintain": false
+    "status": "maintenance",
+    "ismaintain": true,
+    "maintainUntil": "UTC:17:15:15"
   },
   "0.6.65": {
     "environment": "production",
-    "status": "ok",
-    "ismaintain": false
+    "status": "maintenance",
+    "ismaintain": true,
+    "maintainUntil": "UTC:17:15:01"
   },
   "0.6.55": {
     "environment": "production",
