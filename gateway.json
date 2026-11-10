@@ -110,8 +110,8 @@
   },
   "0.6.67": {
     "environment": "production",
-    "status": "ok",
-    "ismaintain": false
+    "status": "maintenance",
+    "ismaintain": true
   },
   "0.6.68": {
     "environment": "alpha",
