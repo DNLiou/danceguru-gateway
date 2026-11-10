@@ -110,11 +110,11 @@
   },
   "0.6.67": {
     "environment": "production",
-    "status": "maintenance",
-    "ismaintain": true
+    "status": "need_update",
+    "ismaintain": false
   },
   "0.6.68": {
-    "environment": "alpha",
+    "environment": "production",
     "status": "ok",
     "ismaintain": false
   }
